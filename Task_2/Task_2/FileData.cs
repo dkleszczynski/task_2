@@ -10,7 +10,7 @@ namespace Task_2
     /// <summary>
     /// Model representation of file metadata.
     /// </summary>
-    public class FileData
+    public class FileData : IFileData
     {
         public FileInfo FileInfo { get; private set; }
              

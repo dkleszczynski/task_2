@@ -11,7 +11,7 @@ namespace TestTask_2
 {
     [TestClass]
     public class TestFileData
-    {
+    {        
         /// <summary>
         /// Run IDE as Administrator (Unauthorized Access Issue)
         /// </summary>
@@ -19,7 +19,7 @@ namespace TestTask_2
         public void GetFileAttribute_FileIsHidden_ReturnsTrue()
         {
             //Arrange
-            string filePath = "c:\\hidden.txt";
+            string filePath = DriveManager.LogicalDrive + "hidden.txt";
             using (var file = File.Create(filePath)) { };
 
             //Make file hidden

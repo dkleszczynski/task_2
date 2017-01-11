@@ -63,8 +63,14 @@ namespace TestTask_2
         public void GetFiles_AccesibleDirectory_ReturnsFileDataList()
         {
             //Arrange
+            bool isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
             FileManager fm = new FileManager();
-            string directoryPath = @"c:\";
+            string directoryPath = "";
+
+            if (isWindows)
+                directoryPath = DriveManager.LogicalDrive + @":\";
+            else
+                directoryPath += "/home";
 
             //Act
             List<FileData> fileData = fm.GetFiles(directoryPath);
@@ -84,10 +90,10 @@ namespace TestTask_2
             bool isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
             if (isWindows == false)
-                throw new UnauthorizedAccessException();
+                Assert.Inconclusive("Cannot perform this test for UNIX type OS.");
 
             //Arrange
-            DirectoryInfo dirInfo = Directory.CreateDirectory("c:\\testDir");
+            DirectoryInfo dirInfo = Directory.CreateDirectory(DriveManager.LogicalDrive + ":\\testDir");
             DirectorySecurity dirSecurity = new DirectorySecurity(dirInfo.FullName, AccessControlSections.All);
 
             var securityId = System.Security.Principal.WindowsIdentity.GetCurrent().User;
@@ -189,7 +195,7 @@ namespace TestTask_2
             string filePath = "";
 
             if (isWindows)
-                filePath = GetFakeFilePath("c:\\", true);
+                filePath = GetFakeFilePath(DriveManager.LogicalDrive + ":\\", true);
             else
                 filePath = GetFakeFilePath("/home", false);
 
@@ -199,22 +205,39 @@ namespace TestTask_2
         }
         
         [TestMethod]
-        [ExpectedException(typeof(NotSupportedException))]
-        [DataRow("/ho;:me")]
-        [DataRow("c:\\tes:t.xml")]
-        public void GetFile_WindowsIncorrectFilePathSyntax_ThrowsException(string filePath)
+        [DataRow("home/", false)]
+        [DataRow(@"/home/ab\0c.xml", false)]
+        [DataRow(@"/home/ab/", false)]
+        [DataRow(":\\tes:t.xml", true)]
+        [DataRow(":\\test>.xml", true)]
+        [DataRow(":\\</test.xml", true)]
+        public void GetFile_IncorrectFilePathSyntax_ThrowsException(string filePath, bool isWindows)
         {
-            //Arrange
-            bool isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+            //DataRow is not for detected OS ==> skip the test
+            if (isWindows != System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                Assert.Inconclusive("Cannot test because of OS type.");
 
-            //Test is only for Windows
-            if (isWindows == false)
-                throw new NotSupportedException();
-                       
+            //Arrange
             FileManager fm = new FileManager();
 
-             //Act
-             fm.GetFile(filePath);
+            //Add logical drive name
+            if (isWindows)
+                filePath = filePath.Insert(0, DriveManager.LogicalDrive);
+           
+            //Act and Assert
+            try
+            {
+                fm.GetFile(filePath);
+                Assert.Fail();
+            }
+            catch(NotSupportedException nsEx)
+            {
+                Assert.IsInstanceOfType(nsEx, typeof(NotSupportedException));
+            }
+            catch(ArgumentException aEx)
+            {
+                Assert.IsInstanceOfType(aEx, typeof(ArgumentException));
+            }
             
         }
         
@@ -242,7 +265,7 @@ namespace TestTask_2
             string path = "";
 
             if (isWindows)
-                path = "c:\\ftp";
+                path = "z:\\ftp";
             else
                 path = "/home/ttt";
 

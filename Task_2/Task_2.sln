@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26014.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task_2", "Task_2\Task_2.csproj", "{68CF3323-F618-45E3-ACB6-5C2B1B92CB88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Task_2", "Task_2\Task_2.csproj", "{68CF3323-F618-45E3-ACB6-5C2B1B92CB88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTask_2", "TestTask_2\TestTask_2.csproj", "{6B3867F5-9D94-4AC9-B27C-D8FE4FD66D30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestTask_2", "TestTask_2\TestTask_2.csproj", "{6B3867F5-9D94-4AC9-B27C-D8FE4FD66D30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

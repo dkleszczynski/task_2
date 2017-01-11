@@ -65,7 +65,20 @@ namespace Task_2
                 FileStream fs = null;
 
                 if (isWindows)
-                    fs = File.Create("c:\\errorLog.txt");
+                {
+                    DriveInfo[] drives = DriveInfo.GetDrives();
+                    string logicalDrive = "";
+
+                    foreach (DriveInfo drive in drives)
+                    {
+                        if (drive.IsReady)
+                        {
+                            logicalDrive = drive.Name[0].ToString();
+                            break;
+                        }
+                    }
+                    fs = File.Create(logicalDrive + ":\\errorLog.txt");
+                }
                 else
                     fs = File.Create("/home/errorLog.txt");
 
